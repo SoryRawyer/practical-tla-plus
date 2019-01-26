@@ -39,10 +39,10 @@ We also define a function, `acc`. Functions in TLA+ are maybe more like list or 
 You can kind of think of `[p \in people |-> 5]` as `{p: 5 for p in people}`. 
 A (slightly) less trivial example would be something like `[x \in 1..10 |-> 2*x]`, which would translate to `[2 * x for x in range(1,11)]`
 
-With the key players of our scenario define, we can now define the relveant variables for an action that we'd like to test. 
+With the key players of our scenario defined, we can now define the relveant variables for an action we'd like to test. 
 We'll start with just a single transaction, from alice to bob, for 3 currency units.  
 Additionally, we'll define an _Invariant_: a property we want to remain true at every step.
-The invariant states that everyone's bank account should have 0 or more currency units.
+The invariant states that everyones bank account should have 0 or more currency units.
 The TLA+ model checker (not sure if this is the same as TLC or not), will make sure this is true at every step.
 
 #### Implementing
@@ -90,4 +90,5 @@ Since there's only one starting state (and, subsequently, one path for our logic
 4. Check that the state of the system didn't violate our invariant(s)
 5. Execute `Deposit`
 6. Check that the state of the system didn't violate our invariant(s)
+
 That's it
