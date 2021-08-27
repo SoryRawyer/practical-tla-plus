@@ -92,3 +92,36 @@ Since there's only one starting state (and, subsequently, one path for our logic
 6. Check that the state of the system didn't violate our invariant(s)
 
 That's it
+
+#### Initial Conditions
+_Language Note_: PlusCal (And TLA+) provides the `a..b` notation to mean "all integers between a and b (inclusive)"
+
+By changing the amount of currency from `3` to, say, `1..6`, we can have TLA+ check our spec for all inputs in that range.
+Unsuprisingly, since we give everyone 5 units to start, TLC will show us that our `NoOverdrafts` invariant is violated when trying to withdraw 6 from Alice's account.
+Chaning the range of `amount` to be capped at `acc[sender]` fixes this problem.
+
+#### Multiple Processes
+_Note to self: you need to run `toolbox` as sudo_
+
+What I think is the last piece of our "wire transfer" program: simultaneous transfers. 
+In PlusCal, each algorithm happening simultaneously belongs to its own `process`. 
+Processes can have their own local variables and code. 
+It sounds somewhat similar to the notion of an OS process. Maybe that's the point.  
+Each thing can have its own local state, and that state may or may not be accessed by another process (I should probably clean up this definition at some point).
+
+In the case of running simultaneous transfers, each process is just running the same code:
+```
+process Wire \in 1..2
+    variables
+        sender = "alice",
+        receiver = "bob",
+        amount \in 1..acc[sender];
+...
+end process;
+end algorithm;
+```
+
+This fails because, in this scenario, we're saying it's OK for Alice to send all of their money twice at one moment in time. This invalidates our invariant, and so the model checker tells us so.  
+
+Even if we change the process to check whether funds are available, the model checker fails.
+
